@@ -1,6 +1,8 @@
-import Link from "next/link";
+"use client";
 
-export const dynamic = "force-dynamic";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 type Goal = {
   playerId: string;
@@ -23,30 +25,27 @@ type Player = {
   position: string;
 };
 
-async function getMatch(id: string): Promise<Match> {
-  const res = await fetch(`http://localhost:3000/api/matches?id=${id}`, {
-    cache: "no-store",
-  });
-  return res.json();
-}
+export default function MatchDetail() {
+  const params = useParams();
+  const id = params.id as string;
 
-async function getPlayers(): Promise<Player[]> {
-  const res = await fetch("http://localhost:3000/api/players", {
-    cache: "no-store",
-  });
-  return res.json();
-}
+  const [match, setMatch] = useState<Match | null>(null);
+  const [players, setPlayers] = useState<Player[]>([]);
 
-export default async function MatchDetail({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const match = await getMatch(params.id);
-  const players = await getPlayers();
+  useEffect(() => {
+    async function load() {
+      const matchRes = await fetch(`/api/matches?id=${id}`);
+      const playersRes = await fetch(`/api/players`);
+      setMatch(await matchRes.json());
+      setPlayers(await playersRes.json());
+    }
+    load();
+  }, [id]);
 
-  function getPlayerName(id: string) {
-    return players.find((p) => p._id === id)?.name || "Okänd";
+  if (!match) return <p>Laddar...</p>;
+
+  function getPlayerName(pid: string) {
+    return players.find((p) => p._id === pid)?.name || "Okänd";
   }
 
   const goalsPerPlayer: Record<string, number> = {};
