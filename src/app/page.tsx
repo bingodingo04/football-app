@@ -9,11 +9,10 @@ type Match = {
   result: string; // format: "2-1"
 };
 
-async function getMatches(): Promise<Match[]> {
-  const res = await fetch("/api/matches", {
-  cache: "no-store",
-});
-return res.json();
+async function getMatches() {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/matches`, { cache: "no-store" });
+  return res.json();
 }
 
 function getResultInfo(result: string) {
