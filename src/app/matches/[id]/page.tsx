@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 type Goal = {
   playerId: string;
   assistBy?: string;
@@ -35,7 +37,11 @@ async function getPlayers(): Promise<Player[]> {
   return res.json();
 }
 
-export default async function MatchDetail({ params }: { params: { id: string } }) {
+export default async function MatchDetail({
+  params,
+}: {
+  params: { id: string };
+}) {
   const match = await getMatch(params.id);
   const players = await getPlayers();
 
