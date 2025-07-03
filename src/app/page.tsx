@@ -10,10 +10,10 @@ type Match = {
 };
 
 async function getMatches(): Promise<Match[]> {
-  const res = await fetch("http://localhost:3000/api/matches", {
-    cache: "no-store",
-  });
-  return res.json();
+  const res = await fetch("/api/matches", {
+  cache: "no-store",
+});
+return res.json();
 }
 
 function getResultInfo(result: string) {
