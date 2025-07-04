@@ -9,7 +9,8 @@ type Match = {
 };
 
 async function getMatches(): Promise<Match[]> {
-  const res = await fetch("/api/matches", { cache: "no-store" });
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/matches`, { cache: "no-store" });
   return res.json();
 }
 
